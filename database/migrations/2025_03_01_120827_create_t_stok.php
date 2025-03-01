@@ -11,12 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('m_kategori', function (Blueprint $table) {
-            $table->id('kategori_id');
-            $table->String('kategori_kode', 10)->unique();
-            $table->String('kategori_nama', 100);
+        Schema::create('t_stok', function (Blueprint $table) {
+            $table->id();
             $table->timestamps();
-            
         });
     }
 
@@ -25,6 +22,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('m_kategori');
+        Schema::dropIfExists('t_stok');
     }
 };
