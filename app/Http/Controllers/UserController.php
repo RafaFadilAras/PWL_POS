@@ -12,11 +12,11 @@ class UserController extends Controller
 
         $data = [
             'level_id' => 2,
-            'username' => 'manager_dua',
-            'nama' => 'Manager 2',
+            'username' => 'manager_tiga',
+            'nama' => 'Manager 3',
             'password' => Hash::make('12345')   
         ];
-        //UserModel::create($data);
+        UserModel::create($data);
 
         $user = UserModel::all();
         return view('user', ['data' => $user]);
