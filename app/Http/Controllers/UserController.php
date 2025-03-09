@@ -8,7 +8,8 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    public function index() {
+    public function index()
+    {
 
         // $data = [
         //     'level_id' => 2,
@@ -35,14 +36,14 @@ class UserController extends Controller
         // $user = UserModel::where('level_id', 2)->count();
         //dd($user);
 
-//         $user = UserModel::firstOrCreate(
-// [
-//                 'username' => 'manager22',
-//                 'nama' => 'Manager Dua Dua',
-//                 'password' => Hash::make('12345'),
-//                 'level_id' => 2
-//             ],
-//          );
+        //         $user = UserModel::firstOrCreate(
+        // [
+        //                 'username' => 'manager22',
+        //                 'nama' => 'Manager Dua Dua',
+        //                 'password' => Hash::make('12345'),
+        //                 'level_id' => 2
+        //             ],
+        //          );
         // $user = UserModel::firstOrNew(
         //     [
         //         'username' => 'manager33',
@@ -67,12 +68,12 @@ class UserController extends Controller
         // $user->isDirty('username');
         // $user->isDirty('nama');
         // $user->isDirty(['nama', 'username']);
- 
+
         // $user->isClean();
         // $user->isClean('username');
         // $user->isClean('nama');
         // $user->isClean(['nama', 'username']);
- 
+
         //$user->save();
 
         //  $user->isDirty();
@@ -89,7 +90,19 @@ class UserController extends Controller
         return view('user', ['data' => $user]);
     }
 
-    public function tambah() {
+    public function tambah()
+    {
         return view('user_tambah');
+    }
+
+    public function tambah_simpan()
+    {
+        UserModel::create([
+            'username' => request('username'),
+            'nama' => request('nama'),
+            'password' => Hash::make(request('password')),
+            'level_id' => request('level_id')
+        ]);
+        return redirect('user');
     }
 }
