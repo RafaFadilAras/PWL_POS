@@ -8,8 +8,8 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    public function index()
-    {
+    // public function index()
+    // {
 
         // $data = [
         //     'level_id' => 2,
@@ -86,9 +86,9 @@ class UserController extends Controller
         // $user->wasChanged('nama'); 
         // dd($user->wasChanged(['nama', 'username']));
 
-        $user = UserModel::all();
-        return view('user', ['data' => $user]);
-    }
+    //     $user = UserModel::all();
+    //     return view('user', ['data' => $user]);
+    // }
 
     public function tambah()
     {
@@ -124,5 +124,10 @@ class UserController extends Controller
         $user = UserModel::find($id);
         $user->delete();
         return redirect('user');
+    }
+
+    public function index() {
+        $user = UserModel::with('level')->get();
+        return view('user', ['data' => $user]);
     }
 }
