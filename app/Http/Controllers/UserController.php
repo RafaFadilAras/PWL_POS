@@ -54,14 +54,14 @@ class UserController extends Controller
         // $user->save();
         // return  view('user', ['data' => $user]);
 
-        $user = UserModel::create([
-            'username' => 'manager12',
-            'nama' => 'Manager12',
-            'password' => Hash::make('12345'),
-            'level_id' => 2,
-        ]);
+        // $user = UserModel::create([
+        //     'username' => 'manager12',
+        //     'nama' => 'Manager12',
+        //     'password' => Hash::make('12345'),
+        //     'level_id' => 2,
+        // ]);
 
-        $user->username = 'manager13';
+        // $user->username = 'manager13';
 
         // $user->isDirty();
         // $user->isDirty('username');
@@ -73,16 +73,19 @@ class UserController extends Controller
         // $user->isClean('nama');
         // $user->isClean(['nama', 'username']);
  
-        $user->save();
+        //$user->save();
 
         //  $user->isDirty();
         //  $user->isClean();
         //  dd($user->isDirty());
 
-        $user->wasChanged();
-        $user->wasChanged('username');
-        $user->wasChanged(['username', 'level_id']);
-        $user->wasChanged('nama'); 
-        dd($user->wasChanged(['nama', 'username']));
+        // $user->wasChanged();
+        // $user->wasChanged('username');
+        // $user->wasChanged(['username', 'level_id']);
+        // $user->wasChanged('nama'); 
+        // dd($user->wasChanged(['nama', 'username']));
+
+        $user = UserModel::all();
+        return view('user', ['data' => $user]);
     }
 }
