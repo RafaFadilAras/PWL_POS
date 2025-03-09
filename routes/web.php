@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Route;
 |
 | Here is where you can register web routes for your application. These
 | routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
+| be assigned to the "web" middleware group. Make somethi   ng great!
 |
 */
 
@@ -27,3 +27,4 @@ Route::get('/user',[UserController::class, 'index']);
 Route::get('/user/tambah', [UserController::class, 'tambah']);
 Route::post('/user/simpan', [UserController::class, 'tambah_simpan']);
 Route::get('/user/ubah/{id}', [UserController::class, 'ubah']);
+Route::put('/user/ubah/{id}', [UserController::class, 'ubah_simpan']);
