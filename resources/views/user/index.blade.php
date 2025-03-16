@@ -20,8 +20,7 @@
                          <th>ID</th>
                          <th>Username</th>
                          <th>Nama</th>
-                         <th>Level
-                             Pengguna</th>
+                         <th>LevelnPengguna</th>
                          <th>Aksi</th>
                      </tr>
                  </thead>
