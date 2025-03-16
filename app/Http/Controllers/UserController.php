@@ -49,7 +49,7 @@ class UserController extends Controller
      }
 
      // Menampilkan halaman form tambah user
-     public function create()
+    public function create()
      {
          $breadcrumb = (object) [
              'title' => 'Tambah User',
@@ -69,5 +69,26 @@ class UserController extends Controller
              'level' => $level,
              'activeMenu' => $activeMenu
          ]);
+    }
+
+    // Mentimpan data user baru
+    public function store(Request $request)
+     {
+         $request->validate([
+             // username harus diisi, berupa string, minimal 3 karakter, dan bernilai unik di tabel m_user kolom username
+             'username' => 'required|string|min:3|unique:m_user,username',
+             'nama'     => 'required|string|max:100', // nama harus diisi, berupa string, dan maksimal 100 karakter
+             'password' => 'required|min:5', // password harus diisi dan minimal 5 karakter
+             'level_id' => 'required|integer' // level_id harus diisi dan berupa angka
+         ]);
+
+         UserModel::create([
+            'username' => $request->username,
+            'nama' => $request->nama,
+            'password' => bcrypt($request->password), // password dienkripsi sebelum disimpan
+            'level_id' => $request->level_id
+        ]);
+
+         return redirect('/user')->with('success', 'Data user berhasil disimpan');
      }
 }
