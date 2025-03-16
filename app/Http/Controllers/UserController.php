@@ -6,6 +6,7 @@ use App\Models\UserModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Models\LevelModel;
+use Yajra\DataTables\Facades\DataTables;
 
 class UserController extends Controller
 {
@@ -91,4 +92,28 @@ class UserController extends Controller
 
          return redirect('/user')->with('success', 'Data user berhasil disimpan');
      }
+    
+    // Menampilkan detail user
+    public function show(string $id)
+     {
+         $user = UserModel::with('level')->find($id);
+ 
+         $breadcrumb = (object) [
+             'title' => 'Detail User',
+             'list'  => ['Home', 'User', 'Detail']
+         ];
+ 
+         $page = (object) [
+             'title' => 'Detail user'
+         ];
+ 
+         $activeMenu = 'user'; // set menu yang sedang aktif
+ 
+         return view('user.show', [
+             'breadcrumb' => $breadcrumb,
+             'page' => $page,
+             'user' => $user,
+             'activeMenu' => $activeMenu
+         ]);
+    }
 }
