@@ -22,4 +22,5 @@
      {
          return $this->belongsTo(UserModel::class, 'user_id', 'user_id');
      }
+     
  }
