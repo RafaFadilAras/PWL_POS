@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\BarangController;
 use App\Http\Controllers\StokController;
+use App\Http\Controllers\SupplierController;
 
 
 /*
@@ -91,4 +92,15 @@ Route::group(['prefix' => 'stok'],function () {
     Route::put('/{id}', [StokController::class, 'update']);
     Route::delete('/{id}', [StokController::class, 'destroy']);
     Route::post('/list', [StokController::class, 'list']);
+});
+
+Route::group(['prefix' => 'supplier'],function () {
+    Route::get('/', [SupplierController::class, 'index']);
+    Route::get('/create', [SupplierController::class, 'create']);
+    Route::post('/', [SupplierController::class, 'store']);
+    Route::get('/{id}', [SupplierController::class, 'show']);
+    Route::get('/{id}/edit', [SupplierController::class, 'edit']);
+    Route::put('/{id}', [SupplierController::class, 'update']);
+    Route::delete('/{id}', [SupplierController::class, 'destroy']);
+    Route::post('/list', [SupplierController::class, 'list']);
 });
