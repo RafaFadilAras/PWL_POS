@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\LevelModel;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\Validator;
 
 class LevelController extends Controller
 {
@@ -55,6 +56,12 @@ class LevelController extends Controller
          return view('level.create', ['breadcrumb' => $breadcrumb, 'page' => $page, 'activeMenu' => $activeMenu]);
     }
 
+    public function create_ajax() {
+        //$level = LevelModel::select('level_id', 'level_nama')->get();
+
+        return view('level.create_ajax');
+    }
+
     //Menyimpan data level baru
     public function store(Request $request)
      {
@@ -70,6 +77,33 @@ class LevelController extends Controller
  
          return redirect('/level')->with('success', 'Data level berhasil disimpan');
      }
+    
+    public function store_ajax(Request $request) {
+        if ($request->ajax() || $request->wantsJson()) {
+            $rules = [
+                'level_kode' => 'required|max:10|unique:m_level,level_kode',
+                'level_nama' => 'required|string|unique:m_level,level_nama|min:3|max:100'
+            ];
+    
+            $validator = Validator::make($request->all(), $rules);
+    
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Validasi Gagal',
+                    'msgField' => $validator->errors()
+                ]);
+            }
+    
+            LevelModel::create($request->all());
+    
+            return response()->json([
+                'status' => true,
+                'message' => 'Data level berhasil disimpan'
+            ]);
+        }
+        redirect('/');
+    }
 
     // menampilkan detail level user
     public function show($id)
