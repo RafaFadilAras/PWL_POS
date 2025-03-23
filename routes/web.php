@@ -92,13 +92,15 @@ Route::group(['prefix' => 'kategori'],function () {
 
 Route::group(['prefix' => 'barang'],function () {
     Route::get('/', [BarangController::class, 'index']);
+    Route::post('/list', [BarangController::class, 'list']);
     Route::get('/create', [BarangController::class, 'create']);
     Route::post('/', [BarangController::class, 'store']);
+    Route::get('/create_ajax', [BarangController::class, 'create_ajax']);
+    Route::post('/ajax', [BarangController::class, 'store_ajax']);
     Route::get('/{id}', [BarangController::class, 'show']);
     Route::get('/{id}/edit', [BarangController::class, 'edit']);
     Route::put('/{id}', [BarangController::class, 'update']);
     Route::delete('/{id}', [BarangController::class, 'destroy']);
-    Route::post('/list', [BarangController::class, 'list']);
 });
 
 Route::group(['prefix' => 'stok'],function () {

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\BarangModel;
 use App\Models\KategoriModel;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\Validator;
 
 class BarangController extends Controller {
     public function index() {
@@ -77,6 +78,13 @@ class BarangController extends Controller {
         ]);
      }
     
+    public function create_ajax() {
+        $kategori = KategoriModel::all();
+
+        return view('barang.create_ajax', compact('kategori'));
+        
+    }
+    
     // Menyimpan data barang baru
     public function store(Request $request)
      {
@@ -98,6 +106,36 @@ class BarangController extends Controller {
 
          return redirect('barang')->with('success', 'Barang berhasil ditambahkan');
      }
+
+    public function store_ajax(Request $request) {
+        if ($request->ajax() || $request->wantsJson()) {
+            $rules = [
+                'kategori_id' => 'required',
+                'barang_kode' => 'required|unique:m_barang',
+                'barang_nama' => 'required',
+                'harga_beli' => 'required|numeric',
+                'harga_jual' => 'required|numeric',
+            ];
+
+            $validator = Validator::make($request->all(), $rules);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Validasi Gagal',
+                    'msgField' => $validator->errors()
+                ]);
+            }
+
+            BarangModel::create($request->all());
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Data barang berhasil disimpan'
+            ]);
+        }
+        redirect('/');
+    }
     
     // Menampilkan detail barang
     public function show(string $id)
