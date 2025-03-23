@@ -229,4 +229,29 @@ class KategoriController extends Controller
             return redirect('/kategori')->with('error', 'Data kategori gagal dihapus karena masih terdapat tabel lain yang terkait dengan data ini');
         }
     }
+
+    public function delete_ajax(Request $request, $id) {
+        if ($request->ajax() || $request->wantsJson()) {
+            $kategori = KategoriModel::find($id);
+            if ($kategori) {
+                $kategori->delete();
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Data kategori berhasil dihapus'
+                ]);
+            } else {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Data kategori tidak ditemukan'
+                ]);
+            }
+        }
+        return redirect('/');
+    }
+
+    public function confirm_ajax(string $id) {
+        $kategori = KategoriModel::find($id);
+
+        return view('kategori.confirm_ajax', ['kategori' => $kategori]);
+    }
 }

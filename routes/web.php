@@ -85,6 +85,8 @@ Route::group(['prefix' => 'kategori'],function () {
     Route::delete('/{id}', [KategoriController::class, 'destroy']);
     Route::get('/{id}/edit_ajax', [KategoriController::class, 'edit_ajax']);
     Route::put('/{id}/update_ajax', [KategoriController::class, 'update_ajax']);
+    Route::get('/{id}/delete_ajax', [KategoriController::class, 'confirm_ajax']);
+    Route::delete('/{id}/delete_ajax', [KategoriController::class, 'delete_ajax']);
     Route::post('/list', [KategoriController::class, 'list']);
 });
 
