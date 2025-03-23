@@ -114,6 +114,7 @@ Route::group(['prefix' => 'stok'],function () {
 
 Route::group(['prefix' => 'supplier'],function () {
     Route::get('/', [SupplierController::class, 'index']);
+    Route::post('/list', [SupplierController::class, 'list']);
     Route::get('/create', [SupplierController::class, 'create']);
     Route::post('/', [SupplierController::class, 'store']);
     Route::get('/create_ajax', [SupplierController::class, 'create_ajax']);
@@ -121,6 +122,7 @@ Route::group(['prefix' => 'supplier'],function () {
     Route::get('/{id}', [SupplierController::class, 'show']);
     Route::get('/{id}/edit', [SupplierController::class, 'edit']);
     Route::put('/{id}', [SupplierController::class, 'update']);
+    Route::get('/{id}/edit_ajax', [SupplierController::class, 'edit_ajax']);
+    Route::put('/{id}/update_ajax', [SupplierController::class, 'update_ajax']);
     Route::delete('/{id}', [SupplierController::class, 'destroy']);
-    Route::post('/list', [SupplierController::class, 'list']);
 });

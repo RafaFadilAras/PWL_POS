@@ -33,12 +33,15 @@
          return DataTables::of($suppliers)
              ->addIndexColumn()
              ->addColumn('aksi', function ($supplier) {
-                 $btn = '<a href="' . url('/supplier/' . $supplier->supplier_id) . '" class="btn btn-info btn-sm">Detail</a> ';
-                 $btn .= '<a href="' . url('/supplier/' . $supplier->supplier_id . '/edit') . '" class="btn btn-warning btn-sm">Edit</a> ';
-                 $btn .= '<form class="d-inline-block" method="POST" action="' . url('/supplier/' . $supplier->supplier_id) . '">';
-                 $btn .= csrf_field() . method_field('DELETE');
-                 $btn .= '<button type="submit" class="btn btn-danger btn-sm" onclick="return confirm(\'Apakah Anda yakin menghapus data ini?\');">Hapus</button></form>';
-                 return $btn;
+                //  $btn = '<a href="' . url('/supplier/' . $supplier->supplier_id) . '" class="btn btn-info btn-sm">Detail</a> ';
+                //  $btn .= '<a href="' . url('/supplier/' . $supplier->supplier_id . '/edit') . '" class="btn btn-warning btn-sm">Edit</a> ';
+                //  $btn .= '<form class="d-inline-block" method="POST" action="' . url('/supplier/' . $supplier->supplier_id) . '">';
+                //  $btn .= csrf_field() . method_field('DELETE');
+                //  $btn .= '<button type="submit" class="btn btn-danger btn-sm" onclick="return confirm(\'Apakah Anda yakin menghapus data ini?\');">Hapus</button></form>';
+                $btn = '<button onclick="modalAction(\''.url('/supplier/' . $supplier->supplier_id . '/show_ajax').'\')" class="btn btn-info btn-sm">Detail</button> ';
+                $btn .= '<button onclick="modalAction(\''.url('/supplier/' . $supplier->supplier_id . '/edit_ajax').'\')" class="btn btn-warning btn-sm">Edit</button> ';
+                $btn .= '<button onclick="modalAction(\''.url('/supplier/' . $supplier->supplier_id . '/delete_ajax').'\')" class="btn btn-danger btn-sm">Hapus</button> ';
+                return $btn;
              })
              ->rawColumns(['aksi'])
              ->make(true);
@@ -160,6 +163,12 @@
              'activeMenu' => $activeMenu
          ]);
      }
+
+    public function edit_ajax(string $id) {
+        $supplier = SupplierModel::find($id);
+
+        return view('supplier.edit_ajax', ['supplier' => $supplier]);
+    }
  
      public function update(Request $request, string $id)
      {
@@ -177,6 +186,42 @@
  
          return redirect('/supplier')->with('success', 'Data Supplier berhasil diubah');
      }
+
+    public function update_ajax(Request $request, $id) {
+        if ($request->ajax() || $request->wantsJson()) {
+            $rules = [
+                'supplier_kode' => 'required|string|min:3|unique:m_supplier,supplier_kode,'. $id . ',supplier_id',
+                'supplier_nama' => 'required|string|max:100',
+                'supplier_alamat' => 'required|string|max:100'
+            ];
+
+            $validator = Validator::make($request->all(), $rules);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => 'false',
+                    'message' => 'Validasi Gagal',
+                    'msgField' => $validator->errors(),
+                ]);
+            }
+
+            $supplier = SupplierModel::find($id);
+            if ($supplier) {
+                $supplier->update($request->all());
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Data Supplier berhasil diubah'
+                ]);
+
+            } else {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Data Supplier tidak ditemukan'
+                ]);
+            }
+        }
+        return redirect('/');
+    }
  
      public function destroy(string $id)
      {
