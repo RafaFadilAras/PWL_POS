@@ -237,4 +237,30 @@
              return redirect('/supplier')->with('error', 'Data Supplier gagal dihapus karena masih terdapat tabel lain yang terkait dengan data ini');
          }
      }
+
+    public function delete_ajax(Request $request, $id) {
+        if($request->ajax() || $request->wantsJson()) {
+            $supplier = SupplierModel::find($id);
+            if ($supplier) {
+                $supplier->delete();
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Data Supplier berhasil dihapus'
+                ]);
+            } else {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Data Supplier tidak ditemukan'
+                ]);
+            }
+        }
+        return redirect('/');
+    }
+    
+    public function confirm_ajax(string $id) {
+        $supplier = SupplierModel::find($id);
+
+        return view('supplier.confirm_ajax', ['supplier' => $supplier]);
+    }
+
  }
