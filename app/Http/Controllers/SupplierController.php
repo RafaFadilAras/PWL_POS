@@ -5,6 +5,7 @@
  use App\Models\SupplierModel;
  use Illuminate\Http\Request;
  use Yajra\DataTables\Facades\DataTables;
+ use Illuminate\Support\Facades\Validator;
  
  class SupplierController extends Controller
  {
@@ -62,6 +63,13 @@
              'activeMenu' => $activeMenu
          ]);
      }
+
+     public function create_ajax() {
+        $supplier = SupplierModel::select('supplier_id', 'supplier_kode', 'supplier_nama')->get();
+
+        return view('supplier.create_ajax')
+            ->with('supplier', $supplier);
+    }
  
      public function store(Request $request)
      {
@@ -80,6 +88,33 @@
          return redirect('/supplier')->with('success', 'Data Supplier berhasil ditambahkan');
      }
  
+     public function store_ajax(Request $request) {
+        if ($request->ajax() || $request->wantsJson()) {
+            $rules = [
+                'supplier_kode' => 'required|string|min:3|unique:m_supplier,supplier_kode',
+                'supplier_nama' => 'required|string|max:100',
+                'supplier_alamat' => 'required|string|max:100'
+            ];
+
+            $validator = Validator::make($request->all(), $rules);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => 'false',
+                    'message' => 'Validasi Gagal',
+                    'msgField' => $validator->errors(),
+                ]);
+            }
+
+            SupplierModel::create($request->all());
+
+            return response()->json([
+                'status' => 'true',
+                'message' => 'Data Supplier berhasil disimpan'
+            ]);
+        }
+        redirect('/');
+     }
      public function show(string $id)
      {
          $supplier = SupplierModel::find($id);
