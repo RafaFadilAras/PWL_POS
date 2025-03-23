@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 use App\Models\KategoriModel;
+use Illuminate\Support\Facades\Validator;
 
 class KategoriController extends Controller
 {
@@ -59,6 +60,13 @@ class KategoriController extends Controller
  
          return view('kategori.create', ['breadcrumb' => $breadcrumb, 'page' => $page, 'kategori' => $kategori, 'activeMenu' => $activeMenu]);
      }
+
+    public function create_ajax() {
+        $kategori = KategoriModel::select('kategori_id', 'kategori_kode', 'kategori_nama')->get();
+
+        return view('kategori.create_ajax')
+            ->with('kategori', $kategori);
+    }
     
     // Menyimpan data kategori baru
     public function store(Request $request)
@@ -74,6 +82,33 @@ class KategoriController extends Controller
         ]);
  
         return redirect('/kategori')->with('success', 'Data kategori berhasil disimpan');
+    }
+
+    public function store_ajax(Request $request) {
+        if ($request->ajax() || $request->wantsJson()) {
+            $rules = [
+                'kategori_kode' => 'required|max:10|unique:m_kategori,kategori_kode',
+                'kategori_nama' => 'required|max:100'
+            ];
+
+            $validator = Validator::make($request->all(), $rules);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Validasi Gagal',
+                    'msgField' => $validator->errors()
+                ]);
+            }
+
+            KategoriModel::create($request->all());
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Data kategori berhasil disimpan'
+            ]);
+        }
+        redirect('/');
     }
 
     // Menampilkan detail kategori

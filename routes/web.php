@@ -77,6 +77,8 @@ Route::group(['prefix' => 'kategori'],function () {
     Route::get('/', [KategoriController::class, 'index']);
     Route::get('/create', [KategoriController::class, 'create']);
     Route::post('/', [KategoriController::class, 'store']);
+    Route::get('/create_ajax', [KategoriController::class, 'create_ajax']);
+    Route::post('/ajax', [KategoriController::class, 'store_ajax']);
     Route::get('/{id}', [KategoriController::class, 'show']);
     Route::get('/{id}/edit', [KategoriController::class, 'edit']);
     Route::put('/{id}', [KategoriController::class, 'update']);
