@@ -8,6 +8,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\BarangController;
 use App\Http\Controllers\StokController;
 use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\AuthController;
 
 
 /*
@@ -133,4 +134,14 @@ Route::group(['prefix' => 'supplier'],function () {
     Route::get('/{id}/delete_ajax', [SupplierController::class, 'confirm_ajax']);
     Route::delete('/{id}/delete_ajax', [SupplierController::class, 'delete_ajax']);
     Route::delete('/{id}', [SupplierController::class, 'destroy']);
+});
+
+Route::pattern('id', '[0-9]+');
+
+Route::get('login', [AuthController::class,'login'])->name('login');
+Route::post('login', [AuthController::class,'postlogin']);
+Route::get('logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/', [WelcomeController::class, 'index']);
 });
