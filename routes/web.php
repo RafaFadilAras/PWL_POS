@@ -38,6 +38,9 @@ use App\Http\Controllers\AuthController;
 
 // Route::get('/', [WelcomeController::class, 'index']);
 
+Route::get('user/register', [UserController::class, 'createRegistrasi'])->name('register');
+Route::post('user/storeRegister', [UserController::class, 'storeRegistrasi'])->name('storeRegister');
+
 Route::get('/', [WelcomeController::class, 'index']);
 
 Route::group(['prefix' => 'user'], function () {
