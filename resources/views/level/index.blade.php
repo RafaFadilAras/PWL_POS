@@ -1,11 +1,12 @@
 @extends('layouts.template')
  @section('content')
- <div class="card card-outline card-primary">
+ <div class="card">
      <div class="card-header">
-         <h3 class="card-title">{{ $page->title }}</h3>
+         <h3 class="card-title">Daftar Level</h3>
          <div class="card-tools">
-             <a class="btn btn-sm btn-primary mt-1" href="{{ url('level/create') }}">Tambah</a>
-             <button onclick="modalAction('{{url('level/create_ajax')}}')" class="btn btn-sm btn-success mt-1">Tambah Ajax</button>
+            <button onclick="modalAction('{{ route('level.import') }}')" class="btn btn-info">Import Level</button>
+            <a class="btn btn-primary" href="{{ url('level/create') }}">Tambah</a>
+            <button onclick="modalAction('{{ route('level.create_ajax')}}')" class="btn btn-success">Tambah Ajax</button>
          </div>
      </div>
      <div class="card-body">

@@ -149,13 +149,24 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/', [WelcomeController::class, 'index']);
 
     Route::middleware(['authorize:ADM'])->group(function () {
-        Route::get('/level', [LevelController::class, 'index']);
-        Route::post('/level/list', [LevelController::class, 'list']); // untuk list json datatables
-        Route::get('/level/create', [LevelController::class, 'create']);
-        Route::post('/level', [LevelController::class, 'store']);
-        Route::get('/level/{id}/edit', [LevelController::class, 'edit']); // untuk tampilkan form edit
-        Route::put('/level/{id}', [LevelController::class, 'update']); // untuk proses update data
-        Route::delete('/level/{id}', [LevelController::class, 'destroy']); // untuk proses hapus data
+        Route::group(['prefix' => 'level'], function () {
+            Route::get('/', [LevelController::class, 'index'])->name('level.index');
+            Route::post('/list', [LevelController::class, 'list'])->name('level.list');
+            Route::get('/create', [LevelController::class, 'create'])->name('level.create');
+            Route::post('/', [LevelController::class, 'store'])->name('level.store');
+            Route::get('/create_ajax', [LevelController::class, 'create_ajax'])->name('level.create_ajax');
+            Route::post('/ajax', [LevelController::class, 'store_ajax'])->name('level.store_ajax');
+            Route::get('/{id}', [LevelController::class, 'show'])->name('level.show');
+            Route::get('/{id}/edit', [LevelController::class, 'edit'])->name('level.edit');
+            Route::put('/{id}', [LevelController::class, 'update'])->name('level.update');
+            Route::get('/{id}/edit_ajax', [LevelController::class, 'edit_ajax'])->name('level.edit_ajax');
+            Route::put('/{id}/update_ajax', [LevelController::class, 'update_ajax'])->name('level.update_ajax');
+            Route::get('/{id}/delete_ajax', [LevelController::class, 'confirm_ajax'])->name('level.confirm_ajax');
+            Route::delete('/{id}/delete_ajax', [LevelController::class, 'delete_ajax'])->name('level.delete_ajax');
+            Route::delete('/{id}', [LevelController::class, 'destroy'])->name('level.destroy');
+            Route::get('/import', [LevelController::class, 'import'])->name('level.import');
+            Route::post('/import_ajax', [LevelController::class, 'import_ajax'])->name('level.import_ajax');
+        });
     });
 
     Route::middleware(['authorize:ADM,MNG'])->group(function () {
