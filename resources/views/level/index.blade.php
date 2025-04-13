@@ -6,6 +6,7 @@
          <div class="card-tools">
             <button onclick="modalAction('{{ route('level.import') }}')" class="btn btn-sm btn-info">Import Level</button>
             <a href="{{ route('level.export_excel') }}" class="btn btn-sm btn-primary">Export Level</a>
+            <a href="{{ route('level.export_pdf') }}" class="btn btn-sm btn-warning"><i class="fa fa-file-pdf"></i> Export Level PDF</a>
             <button onclick="modalAction('{{ route('level.create_ajax')}}')" class="btn btn-sm btn-success">Tambah Ajax</button>
          </div>
      </div>
