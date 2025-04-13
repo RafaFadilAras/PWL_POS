@@ -166,6 +166,7 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/{id}', [UserController::class, 'destroy'])->name('user.destroy');
         Route::get('/import', [UserController::class, 'import'])->name('user.import');
         Route::post('/import_ajax', [UserController::class, 'import_ajax'])->name('user.import_ajax');
+        Route::get('/export_excel', [UserController::class, 'export_excel'])->name('user.export_excel');
     });
 
     Route::middleware(['authorize:ADM'])->group(function () {

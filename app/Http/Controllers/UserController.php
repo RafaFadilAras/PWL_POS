@@ -333,16 +333,16 @@ class UserController extends Controller
 
     public function storeRegistrasi(Request $request)
     {
-        if($request->ajax() || $request->wantsJson()){
-             
+        if ($request->ajax() || $request->wantsJson()) {
+
             $validator = Validator::make($request->all(), [
                 'username' => 'required|string|min:3|unique:m_user,username',
                 'nama' => 'required|string|max:100',
                 'password' => 'required|min:5',
                 'level_id' => 'required|integer'
             ]);
-    
-           
+
+
             if ($validator->fails()) {
                 return response()->json([
                     'status' => false,
@@ -350,8 +350,8 @@ class UserController extends Controller
                     'msgField' => $validator->errors()
                 ]);
             }
-    
-            
+
+
             try {
                 UserModel::create([
                     'username' => $request->username,
@@ -359,7 +359,7 @@ class UserController extends Controller
                     'password' => bcrypt($request->password),
                     'level_id' => $request->level_id
                 ]);
-                
+
                 return response()->json([
                     'status' => true,
                     'message' => 'Registrasi Berhasil, Silahkan Login',
@@ -372,60 +372,109 @@ class UserController extends Controller
                 ]);
             }
         }
-    } 
+    }
 
     public function import()
-     {
-         return view('user.import');
-     }
-     public function import_ajax(Request $request)
-     {
-         if($request->ajax() || $request->wantsJson()){
-             $rules = [
-                 // validasi file harus xls atau xlsx, max 1MB
-                 'file_user' => ['required', 'mimes:xlsx', 'max:1024']
-             ];
-             $validator = Validator::make($request->all(), $rules);
-             if($validator->fails()){
-                 return response()->json([
-                     'status' => false,
-                     'message' => 'Validasi Gagal',
-                     'msgField' => $validator->errors()
-                 ]);
-             }
-             
-             $file = $request->file('file_user');  // ambil file dari request
-             $reader = IOFactory::createReader('Xlsx');  // load reader file excel
-             $reader->setReadDataOnly(true);             // hanya membaca data
-             $spreadsheet = $reader->load($file->getRealPath()); // load file excel
-             $sheet = $spreadsheet->getActiveSheet();    // ambil sheet yang aktif
-             $data = $sheet->toArray(null, false, true, true);   // ambil data excel
-             $insert = [];
-             if(count($data) > 1){ // jika data lebih dari 1 baris
-                 foreach ($data as $baris => $value) {
-                     if($baris > 1){ // baris ke 1 adalah header, maka lewati
-                         $insert[] = [
-                             'level_id' => $value['A'],
-                             'username' => $value['B'],
-                             'nama' => $value['C'],
-                         ];
-                     }
-                 }
-                 if(count($insert) > 0){
-                     // insert data ke database, jika data sudah ada, maka diabaikan
-                     UserModel::insertOrIgnore($insert);   
-                 }
-                 return response()->json([
-                     'status' => true,
-                     'message' => 'Data User berhasil diimport'
-                 ]);
-             }else{
-                 return response()->json([
-                     'status' => false,
-                     'message' => 'Tidak ada data yang diimport'
-                 ]);
-             }
-         }
-         return redirect('/');
-     }
+    {
+        return view('user.import');
+    }
+    public function import_ajax(Request $request)
+    {
+        if ($request->ajax() || $request->wantsJson()) {
+            $rules = [
+                // validasi file harus xls atau xlsx, max 1MB
+                'file_user' => ['required', 'mimes:xlsx', 'max:1024']
+            ];
+            $validator = Validator::make($request->all(), $rules);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Validasi Gagal',
+                    'msgField' => $validator->errors()
+                ]);
+            }
+
+            $file = $request->file('file_user');  // ambil file dari request
+            $reader = IOFactory::createReader('Xlsx');  // load reader file excel
+            $reader->setReadDataOnly(true);             // hanya membaca data
+            $spreadsheet = $reader->load($file->getRealPath()); // load file excel
+            $sheet = $spreadsheet->getActiveSheet();    // ambil sheet yang aktif
+            $data = $sheet->toArray(null, false, true, true);   // ambil data excel
+            $insert = [];
+            if (count($data) > 1) { // jika data lebih dari 1 baris
+                foreach ($data as $baris => $value) {
+                    if ($baris > 1) { // baris ke 1 adalah header, maka lewati
+                        $insert[] = [
+                            'level_id' => $value['A'],
+                            'username' => $value['B'],
+                            'nama' => $value['C'],
+                        ];
+                    }
+                }
+                if (count($insert) > 0) {
+                    // insert data ke database, jika data sudah ada, maka diabaikan
+                    UserModel::insertOrIgnore($insert);
+                }
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Data User berhasil diimport'
+                ]);
+            } else {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Tidak ada data yang diimport'
+                ]);
+            }
+        }
+        return redirect('/');
+    }
+
+    public function export_excel()
+    {
+        $user = UserModel::select('username', 'nama', 'level_id')
+            ->with('level') // ambil data dari relasi level
+            ->orderBy('level_id')
+            ->get();
+
+        $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        $sheet->setCellValue('A1', 'No');
+        $sheet->setCellValue('B1', 'Username');
+        $sheet->setCellValue('C1', 'Nama');
+        $sheet->setCellValue('D1', 'Nama Level');
+
+        $sheet->getStyle('A1:D1')->getFont()->setBold(true);
+
+        $no = 1;
+        $baris = 2;
+        foreach ($user as $value) {
+            $sheet->setCellValue('A' . $baris, $no);
+            $sheet->setCellValue('B' . $baris, $value->username);
+            $sheet->setCellValue('C' . $baris, $value->nama);
+            $sheet->setCellValue('D' . $baris, $value->level->level_nama ?? '-');
+            $no++;
+            $baris++;
+        }
+
+        foreach (range('A', 'D') as $columnID) {
+            $sheet->getColumnDimension($columnID)->setAutoSize(true);
+        }
+
+        $sheet->setTitle('Data User');
+
+        $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+        $filename = 'Data_User_' . date('Y-m-d_H-i-s') . '.xlsx';
+
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="' . $filename . '"');
+        header('Cache-Control: max-age=0');
+        header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+        header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+        header('Cache-Control: cache, must-revalidate');
+        header('Pragma: public');
+
+        $writer->save('php://output');
+        exit;
+    }
 }
