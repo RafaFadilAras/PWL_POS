@@ -159,14 +159,25 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::middleware(['authorize:ADM,MNG'])->group(function () {
-        Route::get('/barang', [BarangController::class, 'index']);
-        Route::post('/barang/list', [BarangController::class, 'list']);
-        Route::get('/barang/create_ajax', [BarangController::class, 'create_ajax']); // ajax form create
-        Route::post('/barang_ajax', [BarangController::class, 'store_ajax']); // ajax store
-        Route::get('/barang/{id}/edit_ajax', [BarangController::class, 'edit_ajax']); // ajax form edit
-        Route::put('/barang/{id}/update_ajax', [BarangController::class, 'update_ajax']); // ajax update
-        Route::get('/barang/{id}/delete_ajax', [BarangController::class, 'confirm_ajax']); // ajax form confirm
-        Route::delete('/barang/{id}/delete_ajax', [BarangController::class, 'delete_ajax']); // ajax delete
+        Route::group(['prefix' => 'barang'], function () {
+            Route::get('/', [BarangController::class, 'index'])->name('barang.index');
+            Route::post('/list', [BarangController::class, 'list'])->name('barang.list');
+            Route::get('/create', [BarangController::class, 'create'])->name('barang.create');
+            Route::post('/', [BarangController::class, 'store'])->name('barang.store');
+            Route::get('/create_ajax', [BarangController::class, 'create_ajax'])->name('barang.create_ajax');
+            Route::post('/ajax', [BarangController::class, 'store_ajax'])->name('barang.store_ajax');
+            Route::get('/{id}', [BarangController::class, 'show'])->name('barang.show');
+            Route::get('/{id}/edit', [BarangController::class, 'edit'])->name('barang.edit');
+            Route::put('/{id}', [BarangController::class, 'update'])->name('barang.update');
+            Route::get('/{id}/edit_ajax', [BarangController::class, 'edit_ajax'])->name('barang.edit_ajax');
+            Route::put('/{id}/update_ajax', [BarangController::class, 'update_ajax'])->name('barang.update_ajax');
+            Route::get('/{id}/delete_ajax', [BarangController::class, 'confirm_ajax'])->name('barang.confirm_ajax');
+            Route::delete('/{id}/delete_ajax', [BarangController::class, 'delete_ajax'])->name('barang.delete_ajax');
+            Route::delete('/{id}', [BarangController::class, 'destroy'])->name('barang.destroy');
+            Route::get('/import', [BarangController::class, 'import'])->name('barang.import');
+            Route::post('/import_ajax', [BarangController::class, 'import_ajax'])->name('barang.import_ajax');
+            Route::get('/export_excel', [BarangController::class, 'export_excel'])->name('barang.export_excel');
+        });
     });
 
     Route::middleware(['authorize:ADM,STF'])->group(function () {
