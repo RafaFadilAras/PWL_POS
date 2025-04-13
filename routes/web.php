@@ -232,6 +232,7 @@ Route::middleware(['auth'])->group(function () {
             Route::delete('/{id}', [KategoriController::class, 'destroy'])->name('kategori.destroy');
             Route::get('/import', [KategoriController::class, 'import'])->name('kategori.import');
             Route::post('/import_ajax', [KategoriController::class, 'import_ajax'])->name('kategori.import_ajax');
+            Route::get('/export_excel', [KategoriController::class, 'export_excel'])->name('kategori.export_excel');
         });
     });
 
