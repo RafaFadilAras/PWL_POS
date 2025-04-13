@@ -187,6 +187,7 @@ Route::middleware(['auth'])->group(function () {
             Route::delete('/{id}', [LevelController::class, 'destroy'])->name('level.destroy');
             Route::get('/import', [LevelController::class, 'import'])->name('level.import');
             Route::post('/import_ajax', [LevelController::class, 'import_ajax'])->name('level.import_ajax');
+            Route::get('/export_excel', [LevelController::class, 'export_excel'])->name('level.export_excel');  
         });
     });
 

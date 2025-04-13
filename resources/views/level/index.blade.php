@@ -4,9 +4,9 @@
      <div class="card-header">
          <h3 class="card-title">Daftar Level</h3>
          <div class="card-tools">
-            <button onclick="modalAction('{{ route('level.import') }}')" class="btn btn-info">Import Level</button>
-            <a class="btn btn-primary" href="{{ url('level/create') }}">Tambah</a>
-            <button onclick="modalAction('{{ route('level.create_ajax')}}')" class="btn btn-success">Tambah Ajax</button>
+            <button onclick="modalAction('{{ route('level.import') }}')" class="btn btn-sm btn-info">Import Level</button>
+            <a href="{{ route('level.export_excel') }}" class="btn btn-sm btn-primary">Export Level</a>
+            <button onclick="modalAction('{{ route('level.create_ajax')}}')" class="btn btn-sm btn-success">Tambah Ajax</button>
          </div>
      </div>
      <div class="card-body">
