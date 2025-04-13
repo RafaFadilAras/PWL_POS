@@ -208,6 +208,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/import', [BarangController::class, 'import'])->name('barang.import');
             Route::post('/import_ajax', [BarangController::class, 'import_ajax'])->name('barang.import_ajax');
             Route::get('/export_excel', [BarangController::class, 'export_excel'])->name('barang.export_excel');
+            Route::get('/export_excel', [BarangController::class, 'export_excel'])->name('barang.export_excel');
         });
     });
 

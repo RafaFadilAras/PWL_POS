@@ -4,9 +4,9 @@
         <div class="card-header">
             <h3 class="card-title">Daftar Barang</h3>
             <div class="card-tools">
-                <button onclick="modalAction('{{ url('barang/import') }}')" class="btn btn-info">Import Barang</button>
-                <a href="{{ url('barang/create') }}" class="btn btn-primary">Tambah Data</a>
-                <button onclick="modalAction('{{ url('barang/create_ajax') }}')" class="btn btn-success">Tambah Data
+                <button onclick="modalAction('{{ url('barang/import') }}')" class="btn btn-sm btn-info">Import Barang</button>
+                <a class="btn btn-sm btn-primary" href="{{ route('barang.export_excel') }}">Export Barang</a>
+                <button onclick="modalAction('{{ url('barang/create_ajax') }}')" class="btn btn-sm btn-success">Tambah Data
                     (Ajax)</button>
             </div>
         </div>
