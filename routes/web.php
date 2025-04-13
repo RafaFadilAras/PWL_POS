@@ -211,21 +211,25 @@ Route::middleware(['auth'])->group(function () {
         });
     });
 
-    Route::middleware(['authorize:ADM,STF'])->group(function () {
-        Route::get('/kategori', [KategoriController::class, 'index']);
-        Route::get('/kategori/create', [KategoriController::class, 'create']);
-        Route::post('/kategori', [KategoriController::class, 'store']);
-        Route::get('/kategori/create_ajax', [KategoriController::class, 'create_ajax']);
-        Route::post('/kategori/ajax', [KategoriController::class, 'store_ajax']);
-        Route::get('/kategori/{id}', [KategoriController::class, 'show']);
-        Route::get('/kategori/{id}/edit', [KategoriController::class, 'edit']);
-        Route::put('/kategori/{id}', [KategoriController::class, 'update']);
-        Route::delete('/kategori/{id}', [KategoriController::class, 'destroy']);
-        Route::get('/kategori/{id}/edit_ajax', [KategoriController::class, 'edit_ajax']);
-        Route::put('/kategori/{id}/update_ajax', [KategoriController::class, 'update_ajax']);
-        Route::get('/kategori/{id}/delete_ajax', [KategoriController::class, 'confirm_ajax']);
-        Route::delete('/kategori/{id}/delete_ajax', [KategoriController::class, 'delete_ajax']);
-        Route::post('/kategori/list', [KategoriController::class, 'list']);
+    Route::middleware(['authorize:ADM,STF'])->group(function(){
+        Route::group(['prefix' => 'kategori'], function () {
+            Route::get('/', [KategoriController::class, 'index'])->name('kategori.index');
+            Route::post('/list', [KategoriController::class, 'list'])->name('kategori.list');
+            Route::get('/{id}',[KategoriController::class, 'show'])->name('kategori.show');
+            Route::get('/create', [KategoriController::class, 'create'])->name('kategori.create');
+            Route::post('/', [KategoriController::class, 'store'])->name('kategori.store');
+            Route::get('/create_ajax', [KategoriController::class, 'create_ajax'])->name('kategori.create_ajax');
+            Route::post('/ajax', [KategoriController::class, 'store_ajax'])->name('kategori.store_ajax');
+            Route::get('/{id}/edit', [KategoriController::class, 'edit'])->name('kategori.edit');
+            Route::put('/{id}', [KategoriController::class, 'update'])->name('kategori.update');
+            Route::get('/{id}/edit_ajax', [KategoriController::class, 'edit_ajax'])->name('kategori.edit_ajax');
+            Route::put('/{id}/update_ajax', [KategoriController::class, 'update_ajax'])->name('kategori.update_ajax');
+            Route::get('/{id}/delete_ajax', [KategoriController::class, 'confirm_ajax'])->name('kategori.confirm_ajax');
+            Route::delete('/{id}/delete_ajax', [KategoriController::class, 'delete_ajax'])->name('kategori.delete_ajax');
+            Route::delete('/{id}', [KategoriController::class, 'destroy'])->name('kategori.destroy');
+            Route::get('/import', [KategoriController::class, 'import'])->name('kategori.import');
+            Route::post('/import_ajax', [KategoriController::class, 'import_ajax'])->name('kategori.import_ajax');
+        });
     });
 
     Route::middleware(['authorize:MNG,STF,ADM'])->group(function(){

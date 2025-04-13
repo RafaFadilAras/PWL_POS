@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 use App\Models\KategoriModel;
 use Illuminate\Support\Facades\Validator;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class KategoriController extends Controller
 {
@@ -32,12 +33,12 @@ class KategoriController extends Controller
          return DataTables::of($kategori)
              ->addIndexColumn()
              ->addColumn('aksi', function ($kategori) {
-                //  $btn = '<a href="'.url('/kategori/' . $kategori->kategori_id).'" class="btn btn-info btn-sm">Detail</a> ';
+                 $btn = '<a href="'.url('/kategori/' . $kategori->kategori_id).'" class="btn btn-info btn-sm">Detail</a> ';
                 //  $btn .= '<a href="'.url('/kategori/' . $kategori->kategori_id . '/edit').'" class="btn btn-warning btn-sm">Edit</a> ';
                 //  $btn .= '<form class="d-inline-block" method="POST" action="'. url('/kategori/'.$kategori->kategori_id).'">'
                 //      . csrf_field() . method_field('DELETE') .
                 //      '<button type="submit" class="btn btn-danger btn-sm" onclick="return confirm(\'Apakah Anda yakin menghapus data ini?\');">Hapus</button></form>';
-                $btn = '<button onclick="modalAction(\''.url('/kategori/' . $kategori->kategori_id . '/show_ajax').'\')" class="btn btn-info btn-sm">Detail</button> ';
+                // $btn = '<button onclick="modalAction(\''.url('/kategori/' . $kategori->kategori_id . '/show').'\')" class="btn btn-info btn-sm">Detail</button> ';
                 $btn .= '<button onclick="modalAction(\''.url('/kategori/' . $kategori->kategori_id . '/edit_ajax').'\')" class="btn btn-warning btn-sm">Edit</button> ';
                 $btn .= '<button onclick="modalAction(\''.url('/kategori/' . $kategori->kategori_id . '/delete_ajax').'\')" class="btn btn-danger btn-sm">Hapus</button>';
                 return $btn;
@@ -254,4 +255,57 @@ class KategoriController extends Controller
 
         return view('kategori.confirm_ajax', ['kategori' => $kategori]);
     }
+
+    public function import()
+     {
+         return view('kategori.import');
+     }
+     public function import_ajax(Request $request)
+     {
+         if($request->ajax() || $request->wantsJson()){
+             $rules = [
+                 // validasi file harus xls atau xlsx, max 1MB
+                 'file_kategori' => ['required', 'mimes:xlsx', 'max:1024']
+             ];
+             $validator = Validator::make($request->all(), $rules);
+             if($validator->fails()){
+                 return response()->json([
+                     'status' => false,
+                     'message' => 'Validasi Gagal',
+                     'msgField' => $validator->errors()
+                 ]);
+             }
+             $file = $request->file('file_kategori');  // ambil file dari request
+             $reader = IOFactory::createReader('Xlsx');  // load reader file excel
+             $reader->setReadDataOnly(true);             // hanya membaca data
+             $spreadsheet = $reader->load($file->getRealPath()); // load file excel
+             $sheet = $spreadsheet->getActiveSheet();    // ambil sheet yang aktif
+             $data = $sheet->toArray(null, false, true, true);   // ambil data excel
+             $insert = [];
+             if(count($data) > 1){ // jika data lebih dari 1 baris
+                 foreach ($data as $baris => $value) {
+                     if($baris > 1){ // baris ke 1 adalah header, maka lewati
+                         $insert[] = [
+                             'kategori_kode' => $value['A'],
+                             'kategori_nama' => $value['B'],
+                         ];
+                     }
+                 }
+                 if(count($insert) > 0){
+                     // insert data ke database, jika data sudah ada, maka diabaikan
+                     KategoriModel::insertOrIgnore($insert);   
+                 }
+                 return response()->json([
+                     'status' => true,
+                     'message' => 'Data Level berhasil diimport'
+                 ]);
+             }else{
+                 return response()->json([
+                     'status' => false,
+                     'message' => 'Tidak ada data yang diimport'
+                 ]);
+             }
+         }
+         return redirect('/');
+     }
 }
