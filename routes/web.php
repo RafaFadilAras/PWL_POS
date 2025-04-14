@@ -9,6 +9,7 @@ use App\Http\Controllers\BarangController;
 use App\Http\Controllers\StokController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ProfileController;
 
 
 /*
@@ -261,5 +262,12 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/export_excel', [SupplierController::class, 'export_excel'])->name('supplier.export_excel');
             Route::get('/export_pdf', [SupplierController::class, 'export_pdf'])->name('supplier.export_pdf');
         });
+    });
+
+    Route::group(['prefix' => 'profile'], function () {
+        Route::get('/', [ProfileController::class, 'index'])->name('profile.index');
+        Route::put('update', [ProfileController::class, 'updateFoto'])->name('profile.update');
+        Route::delete('remove_foto', [ProfileController::class, 'removeFoto'])->name('profile.remove_foto');
+
     });
 });
