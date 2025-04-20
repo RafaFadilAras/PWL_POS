@@ -37,8 +37,8 @@
          </table>
      </div>
  </div>
- <div id="myModal" class="modal fade animate shake" tabindex="-1" role="dialog" databackdrop="static"
-          data-keyboard="false" data-width="75%" aria-hidden="true">
+ <div id="myModal" class="modal fade animate shake" tabindex="-1" databackdrop="static"
+          data-keyboard="false" data-width="75%">
       </div>
  @endsection
  @push('css')
@@ -50,9 +50,10 @@
                  $('#myModal').modal('show'); 
              }); 
          }
-     var dataLevel;
+     var tableLevel;
      $(document).ready(function() {
-         dataLevel = $('#table_level').DataTable({
+         tableLevel = $('#table_level').DataTable({
+            processing: true,
              serverSide: true,
              ajax: {
                  "url": "{{ url('level/list') }}",
@@ -77,7 +78,8 @@
                      searchable: true
                  },{
                      data: "aksi",
-                     className: "",
+                     className: "text-center",
+                     width: "15%",
                      orderable: false,
                      searchable: false
                  }
