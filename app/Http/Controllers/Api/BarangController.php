@@ -25,16 +25,6 @@ class BarangController extends Controller
         return response()->json($barang);
      }
  
-/*************  ✨ Windsurf Command ⭐  *************/
-    /**
-     * Update the specified barang in the database.
-     *
-     * @param \Illuminate\Http\Request $request The request object containing data to update the barang.
-     * @param \App\Models\BarangModel $barang The barang model to be updated.
-     * @return \App\Models\BarangModel The updated barang model.
-     */
-
-/*******  1c96172a-c663-45f7-be22-d1ebc3d57102  *******/
      public function update(Request $request, BarangModel $barang)
      {
          $barang->update($request->all());
