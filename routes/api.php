@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('/register', App\Http\Controllers\Api\RegisterController::class)->name('register');
+Route::post('/registers', App\Http\Controllers\Api\RegisterController::class)->name('registers');
 Route::post('/login', App\Http\Controllers\Api\LoginController::class)->name('login');
 Route::middleware('auth:api')->get('/user', function (Request $request) {
      return $request->user();
@@ -41,8 +41,9 @@ Route::put('kategoris/{kategori}', [App\Http\Controllers\Api\KategoriController:
 Route::delete('kategoris/{kategori}', [App\Http\Controllers\Api\KategoriController::class, 'destroy']);
 
 Route::get('barangs', [App\Http\Controllers\Api\BarangController::class, 'index']);
- Route::post('barangs', [App\Http\Controllers\Api\BarangController::class, 'store']);
- Route::get('barangs/{barang}', [App\Http\Controllers\Api\BarangController::class, 'show']);
- Route::put('barangs/{barang}', [App\Http\Controllers\Api\BarangController::class, 'update']);
- Route::delete('barangs/{barang}', [App\Http\Controllers\Api\BarangController::class, 'destroy']);
- 
+Route::post('barangs', [App\Http\Controllers\Api\BarangController::class, 'store']);
+Route::get('barangs/{barang}', [App\Http\Controllers\Api\BarangController::class, 'show']);
+Route::put('barangs/{barang}', [App\Http\Controllers\Api\BarangController::class, 'update']);
+Route::delete('barangs/{barang}', [App\Http\Controllers\Api\BarangController::class, 'destroy']);
+
+Route::post('/register1', App\Http\Controllers\Api\RegisterController::class)->name('register1');
