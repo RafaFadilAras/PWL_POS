@@ -10,6 +10,7 @@ use App\Http\Controllers\StokController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\DetailController;
 
 
 /*
@@ -165,6 +166,19 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/import_ajax', [SupplierController::class, 'import_ajax'])->name('supplier.import_ajax');
             Route::get('/export_excel', [SupplierController::class, 'export_excel'])->name('supplier.export_excel');
             Route::get('/export_pdf', [SupplierController::class, 'export_pdf'])->name('supplier.export_pdf');
+        });
+    });
+
+     Route::middleware(['authorize:ADM,MNG,DIR'])->group(function () {
+        Route::group(['prefix' => 'detail'], function () {
+            Route::get('/', [DetailController::class, 'index'])->name('detail.index');
+            Route::post('/list', [DetailController::class, 'list'])->name('detail.list');
+            Route::get('/create', [DetailController::class, 'create'])->name('detail.create');
+            Route::post('/', [DetailController::class, 'store'])->name('detail.store');
+            Route::get('/{id}', [DetailController::class, 'show'])->name('detail.show');
+            Route::get('/{id}/edit', [DetailController::class, 'edit'])->name('detail.edit');
+            Route::put('/{id}', [DetailController::class, 'update'])->name('detail.update');
+            Route::delete('/{id}', [DetailController::class, 'destroy'])->name('detail.destroy');
         });
     });
 

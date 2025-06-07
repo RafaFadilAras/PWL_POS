@@ -67,12 +67,12 @@
                      orderable: false,
                      searchable: false
                  },{
-                     data: "level_kode",
+                     data: "kode_level",
                      className: "",
                      orderable: true,
                      searchable: true
                  },{
-                     data: "level_nama",
+                     data: "kode_nama",
                      className: "",
                      orderable: true,
                      searchable: true
